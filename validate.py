@@ -20,6 +20,10 @@ print("\n# Grid benchmark validation\n")
 
 # Get the MPI decomposition
 mpi_decomp = data['geometry']['mpi']
+nnodes = data['geometry']['nodes']
+nmpi = data['geometry']['ranks']
+print(f'       Nodes : {nnodes}\n')
+print(f'   MPI Ranks : {nmpi}\n')
 mpi_decomp_s = '.'.join(str(x) for x in mpi_decomp)
 print(f'   MPI Decomposition : {mpi_decomp_s}\n')
 # Test for valid MPI decomposition
