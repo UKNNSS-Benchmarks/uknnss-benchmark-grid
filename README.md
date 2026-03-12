@@ -11,7 +11,7 @@ Benchmark_Grid is subject of discussion here.
 
 In summary, Benchmark_Grid benchmarks three discretisations of the Dirac matrix. 
 The sparse Dirac matrix benchmark assigns a 4D array to each MPI rank/GPU, referred to as the local lattice size or local volume.
-It is ran for different problem sizes (e.g. 8^4, 12^4, 16^4, 24^4, ...) and reports an average single precision performance for the two biggest runs.
+It is ran for different problem sizes (e.g. 8^4, 12^4, 16^4, 24^4, 32^4, 48^4).
 Since the local volumes are fixed, increasing the number of MPI ranks corresponds to a
 weak scaling of the benchmark.
 
@@ -152,6 +152,10 @@ the baseline and optimised build:
     3. Allocate ranks to Y until it reaches 4, e.g. `--mpi 1.4.4.4`.
     4. Allocate ranks to X until it reaches 4, e.g. `--mpi 4.4.4.4`.
     5. If further ranks are required, continue to allocate evenly in powers of 2.
+- The maximum local volume size *must* be set to 48^4 using the `--max-L 48` option to 
+  `Benchmark_Grid`.
+- Some test configurations *must* be disabled using the
+  `--no-benchmark-flops-fp64 --no-benchmark-flops-sp4-2as` options to `Benchmark_Grid`.
 - While `Grid` options can be varied, the `Benchmark_Grid` software should be run with no
   additional flags than `--json-out`, which will write the results of the benchmark to a
   JSON file.
@@ -199,13 +203,21 @@ decomposition matches the rules described above.
 For example:
 
 ```
+> ./validate.py
+validate.py: test output correctness and extract performance for the UK-NNSS Grid benchmark.
+Usage: validate.py <result_json_file>
+
+> ./validate.py benchmark-grid-32-48l.2783375/result.json 
+
 # Grid benchmark validation
 
-   MPI Decomposition : 1.4.4.4
+               Nodes : 32
+           MPI Ranks : 128
+   MPI Decomposition : 2.4.4.4
 
-   24^4 DWF4 Performance : 7633 Gflops/s/node
-   32^4 DWF4 Performance : 10194 Gflops/s/node
-   48^4 DWF4 Performance : 16731 Gflops/s/node
+   24^4 DWF4 Performance : 5154 Gflops/s/node
+   32^4 DWF4 Performance : 8912 Gflops/s/node
+   48^4 DWF4 Performance : 13876 Gflops/s/node
 
    Validation: PASSED
 
@@ -230,33 +242,33 @@ For both the baseline and optimised runs, three performance numbers are reported
 As described above, these can be extracted using the `validate.py` script included in
 this repository. 
 
-| # Nodes | Local Volume | Other Command line options | MPI decomposition option | # GPU | Baseline Perf. | Optimised Perf. |
-|--:|--:|--:|--:|:--|
-| 1 |   | ``--no-benchmark-flops-fp64 --no-benchmark-flops-sp4-2as --max-L 48`` | | | |
+| # Nodes | Local Volume | Command line options | MPI decomposition option | # GPU | Baseline Perf. | Optimised Perf. |
+|--:|--:|---|---|--:|--:|--:|
+| 1 |   | `--no-benchmark-flops-fp64 --no-benchmark-flops-sp4-2as --max-L 48` | | | | |
 |   | 24^4 | | |   |   | |
 |   | 32^4 | | |   |   | |
 |   | 48^4 | | |   |   | |
-| 8 |   | ``--no-benchmark-flops-fp64 --no-benchmark-flops-sp4-2as --max-L 48`` | | | |
+| 8 |   | `--no-benchmark-flops-fp64 --no-benchmark-flops-sp4-2as --max-L 48` | | | | |
 |   | 24^4 | | |   |   | |
 |   | 32^4 | | |   |   | |
 |   | 48^4 | | |   |   | |
-| 16 |   | ``--no-benchmark-flops-fp64 --no-benchmark-flops-sp4-2as --max-L 48`` | | | |
+| 16 |   | `--no-benchmark-flops-fp64 --no-benchmark-flops-sp4-2as --max-L 48` | | | | |
 |   | 24^4 | | |   |   | |
 |   | 32^4 | | |   |   | |
 |   | 48^4 | | |   |   | |
-| 32 |   | ``--no-benchmark-flops-fp64 --no-benchmark-flops-sp4-2as --max-L 48`` | | | |
+| 32 |   | `--no-benchmark-flops-fp64 --no-benchmark-flops-sp4-2as --max-L 48` | | | | |
 |   | 24^4 | | |   |   | |
 |   | 32^4 | | |   |   | |
 |   | 48^4 | | |   |   | |
-| 128 |   | ``--no-benchmark-flops-fp64 --no-benchmark-flops-sp4-2as --max-L 48`` | | | |
+| 128 |   | `--no-benchmark-flops-fp64 --no-benchmark-flops-sp4-2as --max-L 48` | | | | |
 |   | 24^4 | | |   |   | |
 |   | 32^4 | | |   |   | |
 |   | 48^4 | | |   |   | |
-| 512 |   | ``--no-benchmark-flops-fp64 --no-benchmark-flops-sp4-2as --max-L 48`` | | | |
+| 512 |   | `--no-benchmark-flops-fp64 --no-benchmark-flops-sp4-2as --max-L 48` | | | | |
 |   | 24^4 | | |   |   | |
 |   | 32^4 | | |   |   | |
 |   | 48^4 | | |   |   | |
-| Full system |   | ``--no-benchmark-flops-fp64 --no-benchmark-flops-sp4-2as --max-L 48`` | | | |
+| Full system |   | `--no-benchmark-flops-fp64 --no-benchmark-flops-sp4-2as --max-L 48` | | | | |
 |   | 24^4 | | |   |   | |
 |   | 32^4 | | |   |   | |
 |   | 48^4 | | |   |   | |
@@ -269,29 +281,29 @@ IsambardAI nodes have 4x NVIDIA GH200 per node and 4x 200 Gbps Slingshot 11 inte
 
 In all cases, 1 MPI process per GPU was used and 72 CPU OpenMP threads per MPI process.
 
-| # Nodes | Local Volume | Other Command line options | MPI decomposition option | # GPU | Perf. (Gflops/s/node) |
-|--:|--:|--:|--:|:--|
-| 1 |   | `--no-benchmark-flops-fp64 --no-benchmark-flops-sp4-2as --max-L 48` | `--mpi 1.1.1.4` | 4 |
+| # Nodes | Local Volume | Command line options | MPI decomposition option | # GPU | Perf. (Gflops/s/node) |
+|--:|--:|---|---|--:|--:|
+| 1 |   | `--no-benchmark-flops-fp64 --no-benchmark-flops-sp4-2as --max-L 48` | `--mpi 1.1.1.4` | 4 | |
 |   | 24^4 | | | | 22410  |
 |   | 32^4 | | | | 25656  |
 |   | 48^4 | | | | 28014  |
-| 8 |   | ``--no-benchmark-flops-fp64 --no-benchmark-flops-sp4-2as --max-L 48`` | `--mpi 1.2.4.4` | 32 |
+| 8 |   | ``--no-benchmark-flops-fp64 --no-benchmark-flops-sp4-2as --max-L 48`` | `--mpi 1.2.4.4` | 32 | |
 |   | 24^4 | | | | 9814  |
 |   | 32^4 | | | | 13999  |
 |   | 48^4 | | | | 20757  |
-| 16 |   | ``--no-benchmark-flops-fp64 --no-benchmark-flops-sp4-2as --max-L 48`` | `--mpi 1.4.4.4` | 64 |
+| 16 |   | ``--no-benchmark-flops-fp64 --no-benchmark-flops-sp4-2as --max-L 48`` | `--mpi 1.4.4.4` | 64 | |
 |   | 24^4 | | | | 7633  |
 |   | 32^4 | | | | 10194  |
 |   | 48^4 | | | | 16731  |
-| 32 |   | ``--no-benchmark-flops-fp64 --no-benchmark-flops-sp4-2as --max-L 48`` | `--mpi 2.4.4.4` | 128 |
+| 32 |   | ``--no-benchmark-flops-fp64 --no-benchmark-flops-sp4-2as --max-L 48`` | `--mpi 2.4.4.4` | 128 | |
 |   | 24^4 | | | | 5154  |
 |   | 32^4 | | | | 8912  |
 |   | 48^4 | | | | 13876  |
-| 128 |   | ``--no-benchmark-flops-fp64 --no-benchmark-flops-sp4-2as --max-L 48`` | `--mpi 4.4.4.8` | 512 |
+| 128 |   | ``--no-benchmark-flops-fp64 --no-benchmark-flops-sp4-2as --max-L 48`` | `--mpi 4.4.4.8` | 512 | |
 |   | 24^4 | | | | 3469 |
 |   | 32^4 | | | | 7293 |
 |   | 48^4 | | | | 11771 |
-| 512 |   | ``--no-benchmark-flops-fp64 --no-benchmark-flops-sp4-2as --max-L 48`` | `--mpi 4.8.8.8` | 2048 |
+| 512 |   | ``--no-benchmark-flops-fp64 --no-benchmark-flops-sp4-2as --max-L 48`` | `--mpi 4.8.8.8` | 2048 | |
 |   | 24^4 | | | |  2258 |
 |   | 32^4 | | | |  6453 |
 |   | 48^4 | | | |  11383 |
