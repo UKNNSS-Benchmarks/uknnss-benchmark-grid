@@ -45,4 +45,5 @@ for lval in lvals:
         print(f'   {lval}^4 DWF4 Performance : {perfvals[lval]:.0f} Gflops/s/node')
 
 print("\n   Validation:", ("PASSED" if valid else "FAILED") )
+print()
 

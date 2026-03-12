@@ -142,7 +142,7 @@ All details to be reported are to be taken from this output file.
 ### Benchmark execution
 
 The following conditions on options and runtime configuration must be adhered to for both 
-the baseline and optiised build:
+the baseline and optimised build:
 
 - The runtime performance is affected by the MPI rank distribution. MPI ranks are specified
   with the `Grid` option `--mpi X.Y.Z.T` flag. To be representative of realistic
@@ -152,10 +152,9 @@ the baseline and optiised build:
     3. Allocate ranks to Y until it reaches 4, e.g. `--mpi 1.4.4.4`.
     4. Allocate ranks to X until it reaches 4, e.g. `--mpi 4.4.4.4`.
     5. If further ranks are required, continue to allocate evenly in powers of 2.
-- While `Grid` options can be varied, the `Bnechmark_Grid` software should be run with no
+- While `Grid` options can be varied, the `Benchmark_Grid` software should be run with no
   additional flags than `--json-out`, which will write the results of the benchmark to a
   JSON file.
-- A single GPU should be allocated per MPI rank (or GCD in the case of e.g. MI250X).
 
 Besides the mandatory flags, Grid has many command-line interface flags that control its
 runtime behaviour. Identifying the optimal flags, as with the compilation options, is
@@ -193,61 +192,109 @@ Failed to validate free Wilson propagator:
 
 ### Performance results
 
-The figure of merit (FoM) for `Benchmark_Grid` is the comparison point sparse Dirac
-matrix multiplication flop rate. This is the average of the single-precision
-Domain-wall fermion benchmarks for different local volumes, which are
-representative of typical production runs. With `jq`, this can be extracted
-from the result JSONs as:
+Performance results can be extracted using the [validate.py](./validate.py) script.
+This script ensures all the required data is present in the file and that the MPI
+decomposition matches the rules described above.
+
+For example:
 
 ```
-jq '.flops | .comparison_point_Gflops' path/to/json
-```
+# Grid benchmark validation
 
-or using any other JSON-parser of choice. This is given in units of GFlops/s/node.
+   MPI Decomposition : 1.4.4.4
+
+   24^4 DWF4 Performance : 7633 Gflops/s/node
+   32^4 DWF4 Performance : 10194 Gflops/s/node
+   48^4 DWF4 Performance : 16731 Gflops/s/node
+
+   Validation: PASSED
+
+```
 
 ### Required data
 
-- **Reference FoM:** The reference FoM is from the IsambardAI system using 128 GPU (32 nodes): *7766 Gflops/s per node*.
-- **Target configuration:** The Grid performance must meet the same performance as the reference FoM on a minimum of 256 GPU/GCD.
+Data for the following table have to be provided. Optionally, if partitions
+with different hardware (e.g. processor/GPU type, interconnect) are provided, then the
+benchmark should also be run on the maximum possible size in each partition and the
+results reported in the same format as the table below.
 
+The MPI decomposition option should be chosen to match the number of MPI processes 
+used per node as described above.
 
-Data for the following table have to be provided.
+For both the baseline and optimised runs, three performance numbers are reported:
 
-| Command line options | Nodes/GPUs | Baseline FoM | Optimised code FoM | Comments |
+1. FP32 DWF4 24^4 local volume performance in Gflops/s/node
+2. FP32 DWF4 32^4 local volume performance in Gflops/s/node
+2. FP32 DWF4 48^4 local volume performance in Gflops/s/node
+
+As described above, these can be extracted using the `validate.py` script included in
+this repository. 
+
+| # Nodes | Local Volume | Other Command line options | MPI decomposition option | # GPU | Baseline Perf. | Optimised Perf. |
 |--:|--:|--:|--:|:--|
-| ``--mpi 1.1.1.1`` | 1/1 | | | Single GPU throughput |
-| ``--mpi 1.1.1.4`` | 1/4 | | | Assuming a n=4 four GPU per node configuration. Adjust for more GPU per node, e.g. 8 GPU per node would be `--mpi 1.1.2.4`. |
-| ``--mpi 1.2.4.4`` | 8/32 | | | Assuming a n=4 four GPU per node configuration. Adjust for more GPU per node. |
-| ``--mpi 1.4.4.4`` | 16/64 | | | Assuming a n=4 four GPU per node configuration. Adjust for more GPU per node. |
-| ``--mpi 2.4.4.4`` | 32/128 | | | Assuming a n=4 four GPU per node configuration. Adjust for more GPU per node.  |
-| ``--mpi 4.4.4.4`` | 64/256 | | | Assuming a n=4 four GPU per node configuration. Adjust for more GPU per node.  |
-| ``--mpi ...`` | | | | Whole system run |
-
-Optionally, if an island/subpartition with higher bandwidth is provided, then the benchmark should
-be run on the maximum possible size in this partition and the results reported in the same format
-as the table above.
+| 1 |   | ``--no-benchmark-flops-fp64 --no-benchmark-flops-sp4-2as --max-L 48`` | | | |
+|   | 24^4 | | |   |   | |
+|   | 32^4 | | |   |   | |
+|   | 48^4 | | |   |   | |
+| 8 |   | ``--no-benchmark-flops-fp64 --no-benchmark-flops-sp4-2as --max-L 48`` | | | |
+|   | 24^4 | | |   |   | |
+|   | 32^4 | | |   |   | |
+|   | 48^4 | | |   |   | |
+| 16 |   | ``--no-benchmark-flops-fp64 --no-benchmark-flops-sp4-2as --max-L 48`` | | | |
+|   | 24^4 | | |   |   | |
+|   | 32^4 | | |   |   | |
+|   | 48^4 | | |   |   | |
+| 32 |   | ``--no-benchmark-flops-fp64 --no-benchmark-flops-sp4-2as --max-L 48`` | | | |
+|   | 24^4 | | |   |   | |
+|   | 32^4 | | |   |   | |
+|   | 48^4 | | |   |   | |
+| 128 |   | ``--no-benchmark-flops-fp64 --no-benchmark-flops-sp4-2as --max-L 48`` | | | |
+|   | 24^4 | | |   |   | |
+|   | 32^4 | | |   |   | |
+|   | 48^4 | | |   |   | |
+| 512 |   | ``--no-benchmark-flops-fp64 --no-benchmark-flops-sp4-2as --max-L 48`` | | | |
+|   | 24^4 | | |   |   | |
+|   | 32^4 | | |   |   | |
+|   | 48^4 | | |   |   | |
+| Full system |   | ``--no-benchmark-flops-fp64 --no-benchmark-flops-sp4-2as --max-L 48`` | | | |
+|   | 24^4 | | |   |   | |
+|   | 32^4 | | |   |   | |
+|   | 48^4 | | |   |   | |
 
 ### Example performance data
 
 To aid in testing, we provide FoM values for varying problem sizes on
-the [CSCS Daint system](https://docs.cscs.ch/clusters/daint/) and
 the [IsambardAI system](https://docs.isambard.ac.uk/specs/#system-specifications-isambard-ai-phase-2).
-Both Daint nodes and IsambardAI have 4x NVIDIA GH200 per node and
-4x 200 Gbps Slingshot 11 interfaces per node. 
+IsambardAI nodes have 4x NVIDIA GH200 per node and 4x 200 Gbps Slingshot 11 interfaces per node. 
 
-In all cases, 1 MPI process per GPU was used and 72 CPU OpenMP threads
-per MPI process.
+In all cases, 1 MPI process per GPU was used and 72 CPU OpenMP threads per MPI process.
 
-| Nodes | Total GPU | `--mpi` option | Daint FoM (Comparison Point Gflops/s per node) | IsambardAI FoM (Comparison Point Gflops/s per node) |
-|--:|--:|--:|--:|--:|
-| 4 | 16 | 1.1.4.4 | 19770 | 20201 |
-| 8 | 32 | 1.2.4.4 | 11198 | 9066 |
-| 16 | 64 | 1.4.4.4 | 9389 | 8739 |
-| 32 | 128 | 2.4.4.4 | 7388 | 7766* |
-| 64 | 256 | 4.4.4.4 | 5862 | 6413 |
-| 128 | 512 | 4.4.4.8 | | 6040 |
-| 256 | 1024 | 4.4.8.8 | | 5271 |
-| 512 | 2048 | 4.8.8.8 | | 4504 |
+| # Nodes | Local Volume | Other Command line options | MPI decomposition option | # GPU | Perf. (Gflops/s/node) |
+|--:|--:|--:|--:|:--|
+| 1 |   | `--no-benchmark-flops-fp64 --no-benchmark-flops-sp4-2as --max-L 48` | `--mpi 1.1.1.4` | 4 |
+|   | 24^4 | | | | 22410  |
+|   | 32^4 | | | | 25656  |
+|   | 48^4 | | | | 28014  |
+| 8 |   | ``--no-benchmark-flops-fp64 --no-benchmark-flops-sp4-2as --max-L 48`` | `--mpi 1.2.4.4` | 32 |
+|   | 24^4 | | | | 9814  |
+|   | 32^4 | | | | 13999  |
+|   | 48^4 | | | | 20757  |
+| 16 |   | ``--no-benchmark-flops-fp64 --no-benchmark-flops-sp4-2as --max-L 48`` | `--mpi 1.4.4.4` | 64 |
+|   | 24^4 | | | | 7633  |
+|   | 32^4 | | | | 10194  |
+|   | 48^4 | | | | 16731  |
+| 32 |   | ``--no-benchmark-flops-fp64 --no-benchmark-flops-sp4-2as --max-L 48`` | `--mpi 2.4.4.4` | 128 |
+|   | 24^4 | | | | 5154  |
+|   | 32^4 | | | | 8912  |
+|   | 48^4 | | | | 13876  |
+| 128 |   | ``--no-benchmark-flops-fp64 --no-benchmark-flops-sp4-2as --max-L 48`` | `--mpi 4.4.4.8` | 512 |
+|   | 24^4 | | | | 3469 |
+|   | 32^4 | | | | 7293 |
+|   | 48^4 | | | | 11771 |
+| 512 |   | ``--no-benchmark-flops-fp64 --no-benchmark-flops-sp4-2as --max-L 48`` | `--mpi 4.8.8.8` | 2048 |
+|   | 24^4 | | | |  2258 |
+|   | 32^4 | | | |  6453 |
+|   | 48^4 | | | |  11383 |
 
 ## Reporting Results
 
