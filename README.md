@@ -310,7 +310,7 @@ In all cases, 1 MPI process per GPU was used and 72 CPU OpenMP threads per MPI p
 
 ## Reporting Results
 
-For both the baseline build and the optimised build. The offeror should
+For both the baseline build and the optimised build, the bidder should
 provide copies of:
 
 - Details of any modifications made to the `Grid` or `Benchmark_Grid` source code
