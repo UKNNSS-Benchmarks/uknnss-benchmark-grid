@@ -15,18 +15,6 @@ It is ran for different problem sizes (e.g. 8^4, 12^4, 16^4, 24^4, 32^4, 48^4).
 Since the local volumes are fixed, increasing the number of MPI ranks corresponds to a
 weak scaling of the benchmark.
 
-## Status
-
-Stable
-
-## Maintainers
-
-- Antonin Portelli
-- Ryan Hill
-
-**Important:** Please do not contact the benchmark maintainers directly with any questions.
-All questions on the benchmark must be submitted via the procurement response mechanism.
-
 ## Software
 
 [https://github.com/aportelli/grid-benchmark](https://github.com/aportelli/grid-benchmark)
