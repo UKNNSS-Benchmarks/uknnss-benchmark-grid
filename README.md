@@ -18,17 +18,16 @@ Stable
 - Antonin Portelli
 - Ryan Hill
 
-**Important:** Please do not contact the benchmark maintainers directly with any questions.
+> **Important:** Please do not contact the benchmark maintainers directly with any questions.
 All questions on the benchmark must be submitted via the procurement response mechanism.
 
 ## Software
 
+Git Repository: [https://github.com/aportelli/grid-benchmark](https://github.com/aportelli/grid-benchmark)
+
 > **Important:** All results submitted should be based on the following repository commits:
 >- grid-benchmark repository: [c7457a8](https://github.com/aportelli/grid-benchmark/commit/c7457a85b6a0d9d1578838af11477cb41b1a5764)
 >- Grid repository: [6165931](https://github.com/paboyle/Grid/commit/6165931afaa53a9885b6183ff762fc2477f30b51)
-
-
-Git Repository: [https://github.com/aportelli/grid-benchmark](https://github.com/aportelli/grid-benchmark)
 
 The benchmark software is licensed under GPLv2, with a list of
 contributors available at https://github.com/aportelli/grid-benchmark/graphs/contributors.
@@ -39,21 +38,41 @@ The benchmark uses the underpinning Grid C++ 17 library for lattice QCD applicat
 
 ## Building the benchmark
 
+Compiling the code involves the following steps:
+1. Configure the environment.
+
+   Create a suitable configuration under `grid_benchmark/systems`. Example build configurations are provided for:
+
+   - [Tursa (EPCC, Scotland)](https://epcced.github.io/dirac-docs/tursa-user-guide/hardware/): CUDA 11.4, GCC 9.3.0, OpenMPI 4.1.1, UCX 1.12.0 + NVIDIA A100 GPU, NVLink, Infiniband interconnect
+   - [Daint (CSCS, Switzerland)](https://docs.cscs.ch/clusters/daint/): CUDA 12.4, GCC 14.2, HPE Cray MPICH 8.1.32 + NVIDIA GH200 CPU+GPU, NVLink, Slingshot 11 interconnect
+   - [LUMI-G (CSC, Finland)](https://docs.lumi-supercomputer.eu/hardware/lumig/): ROCm 6.0.3, AMD clang 17.0.1, HPE Cray MPICH 8.1.23 (custom) + AMD MI250X GPU, Infinity fabric, Slingshot 11 interconnect
+
+   Multiple configurations can be defined for each system.
+
+2. Boostrap the build environment directory `<env-dir>`:
+   ```
+   cd grid-benchmark
+   ./bootstrap-env <env-dir> <system>
+   ```
+
+3. Build GRID
+   ```
+   ./build-grid.sh <env-dir> <config> <njobs>
+   ```
+   choosing the configuration from the system's `grid-config.json`.
+
+4. Build GRID benchmark
+   ```
+   ./build-benchmark.sh <env-dir> <config> <njobs>
+   ```
+
 Detailed build instructions can be found in the benchmark source code
 repository at:
 
 - [https://github.com/aportelli/grid-benchmark/blob/main/Readme.md]
 
-Example build configurations are provided for:
-
-- [Tursa (EPCC, Scotland)](https://epcced.github.io/dirac-docs/tursa-user-guide/hardware/): CUDA 11.4, GCC 9.3.0, OpenMPI 4.1.1, UCX 1.12.0
-   + NVIDIA A100 GPU, NVLink, Infiniband interconnect
-- [Daint (CSCS, Switzerland)](https://docs.cscs.ch/clusters/daint/): CUDA 12.4, GCC 14.2, HPE Cray MPICH 8.1.32
-   + NVIDIA GH200 CPU+GPU, NVLink, Slingshot 11 interconnect
-- [LUMI-G (CSC, Finland)](https://docs.lumi-supercomputer.eu/hardware/lumig/): ROCm 6.0.3, AMD clang 17.0.1, HPE Cray MPICH 8.1.23 (custom)
-   + AMD MI250X GPU, Infinity fabric, Slingshot 11 interconnect
- 
 Further reference builds are available from [https://github.com/paboyle/Grid/tree/develop/systems](https://github.com/paboyle/Grid/tree/develop/systems).
+
 
 ### Pre-approved code modifications
 `Benchmark_Grid` has been written with the intention that no modifications to the source code
