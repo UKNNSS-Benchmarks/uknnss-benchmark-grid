@@ -220,6 +220,8 @@ Usage: validate.py <result_json_file>
 
 ```
 
+The evaluation sheets ask explicitly for the values reported in the lines ```32^4 DWF4 Performance``` and ```48^4 DWF4 Performance```. All other values serve as sanity check only. 
+
 ### Reference data
 
 To aid in testing, we provide measurements for varying problem sizes on
