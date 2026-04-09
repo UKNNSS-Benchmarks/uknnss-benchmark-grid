@@ -149,6 +149,7 @@ the baseline and optimised build:
     3. Allocate ranks to Y until it reaches 4, e.g. `--mpi 1.4.4.4`.
     4. Allocate ranks to X until it reaches 4, e.g. `--mpi 4.4.4.4`.
     5. If further ranks are required, continue to allocate evenly in powers of 2.
+       
   However, for almost all configurations, the reporting guidelines specify exactly what settings to use. Only for the largest experiments, pick the configuration that maximises the use of the (envisaged) system.
 - The maximum local volume size *must* be set to 48^4 using the `--max-L 48` option to 
   `Benchmark_Grid`.
