@@ -141,13 +141,15 @@ The following conditions on options and runtime configuration must be adhered to
 the baseline and optimised build:
 
 - The runtime performance is affected by the MPI rank distribution. MPI ranks are specified
-  with the `Grid` option `--mpi X.Y.Z.T` flag. To be representative of realistic
-  workloads, the following algorithm **must** be used for setting the MPI decomposition:
+  with the `Grid` option `--mpi X.Y.Z.T` flag. 
+  
+  Remark: To be representative of realistic workloads, the following algorithm **must** be used for setting the MPI decomposition:
     1. Allocate ranks to T until it reaches 4, e.g. `--mpi 1.1.1.4`.
     2. Allocate ranks to Z until it reaches 4, e.g. `--mpi 1.1.4.4`.
     3. Allocate ranks to Y until it reaches 4, e.g. `--mpi 1.4.4.4`.
     4. Allocate ranks to X until it reaches 4, e.g. `--mpi 4.4.4.4`.
     5. If further ranks are required, continue to allocate evenly in powers of 2.
+  However, for almost all configurations, the reporting guidelines specify exactly what settings to use. Only for the largest experiments, pick the configuration that maximises the use of the (envisaged) system.
 - The maximum local volume size *must* be set to 48^4 using the `--max-L 48` option to 
   `Benchmark_Grid`.
 - Some test configurations *must* be disabled using the
