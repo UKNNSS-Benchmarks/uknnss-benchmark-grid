@@ -156,11 +156,8 @@ the baseline and optimised build:
 - While `Grid` options can be varied, the `Benchmark_Grid` software should be run with no
   additional flags than `--json-out`, which will write the results of the benchmark to a
   JSON file.
-
-<div style = "background:red">
-- The benchmarks require `Grid` performance data for both GPU-based and CPU-based runs. 
+- <i>TODO</i> The benchmarks require `Grid` performance data for both GPU-based and CPU-based runs. 
   To use the code without GPUs ...
-</div>
 
 Besides the mandatory flags, Grid has many command-line interface flags that control its
 runtime behaviour. Identifying the optimal flags, as with the compilation options, is
