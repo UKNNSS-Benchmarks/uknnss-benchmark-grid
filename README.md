@@ -39,15 +39,17 @@ The benchmark uses the underpinning Grid C++ 17 library for lattice QCD applicat
 ## Building the benchmark
 
 Compiling the code involves the following steps:
-1. Configure the environment.
+1. Configure the build environment.
 
-   Create a suitable configuration under `grid_benchmark/systems`. Example build configurations are provided for:
+   Create a suitable `grid-config.json` configuration under `grid_benchmark/systems/<your-system-name>`. Additional files (e.g. to configure environment variables can be put in a `files` sub-directory).
+   
+   Example build configurations are provided for:
 
-   - [Tursa (EPCC, Scotland)](https://epcced.github.io/dirac-docs/tursa-user-guide/hardware/): CUDA 11.4, GCC 9.3.0, OpenMPI 4.1.1, UCX 1.12.0 + NVIDIA A100 GPU, NVLink, Infiniband interconnect
-   - [Daint (CSCS, Switzerland)](https://docs.cscs.ch/clusters/daint/): CUDA 12.4, GCC 14.2, HPE Cray MPICH 8.1.32 + NVIDIA GH200 CPU+GPU, NVLink, Slingshot 11 interconnect
-   - [LUMI-G (CSC, Finland)](https://docs.lumi-supercomputer.eu/hardware/lumig/): ROCm 6.0.3, AMD clang 17.0.1, HPE Cray MPICH 8.1.23 (custom) + AMD MI250X GPU, Infinity fabric, Slingshot 11 interconnect
+   - [Tursa (EPCC, Scotland)](https://epcced.github.io/dirac-docs/tursa-user-guide/hardware/): CUDA 11.4, GCC 9.3.0, OpenMPI 4.1.1, UCX 1.12.0 + NVIDIA A100 GPU, NVLink, Infiniband interconnect (GPU and CPU configurations)
+   - [Daint (CSCS, Switzerland)](https://docs.cscs.ch/clusters/daint/): CUDA 12.4, GCC 14.2, HPE Cray MPICH 8.1.32 + NVIDIA GH200 CPU+GPU, NVLink, Slingshot 11 interconnect (GPU configurations)
+   - [LUMI-G (CSC, Finland)](https://docs.lumi-supercomputer.eu/hardware/lumig/): ROCm 6.0.3, AMD clang 17.0.1, HPE Cray MPICH 8.1.23 (custom) + AMD MI250X GPU, Infinity fabric, Slingshot 11 interconnect (GPU configuration)
 
-   Multiple configurations can be defined for each system.
+   Multiple configurations can be defined for each system. Since benchmark results are requested for both CPU and GPU runs, suitable configurations for these should be defined (the names `cpu` and `gpu`, respectively, are used below).
 
 2. Boostrap the build environment directory `<env-dir>`:
    ```
@@ -55,15 +57,24 @@ Compiling the code involves the following steps:
    ./bootstrap-env <env-dir> <system>
    ```
 
-3. Build GRID
+3. Build GRID for both CPU and GPU configurations
    ```
-   ./build-grid.sh <env-dir> <config> <njobs>
+   ./build-grid.sh <env-dir> cpu <njobs>
+   ./build-grid.sh <env-dir> gpu <njobs>
    ```
-   choosing the configuration from the system's `grid-config.json`.
 
-4. Build GRID benchmark
+4. Build GRID benchmark for both CPU and GPU configurations
    ```
-   ./build-benchmark.sh <env-dir> <config> <njobs>
+   ./build-benchmark.sh <env-dir> cpu <njobs>
+   ./build-benchmark.sh <env-dir> gpu <njobs>
+   ```
+   The required benchmark executables will then be located at
+   ```
+   # CPU benchmark
+   <env-dir>/build/Grid-benchmarks/cpu/Benchmark_Grid
+
+   # GPU benchmark
+   <env-dir>/build/Grid-benchmarks/gpu/Benchmark_Grid
    ```
 
 Detailed build instructions can be found in the benchmark source code
@@ -135,35 +146,40 @@ The benchmark descriptions below specify mandatory command line flags.
 The output of the `Benchmark_Grid` code is controlled via the `--json-out` option. 
 All details to be reported are to be taken from this output file.
 
+
 ### Benchmark execution
 
-The following conditions on options and runtime configuration must be adhered to for both 
-the baseline and optimised build:
+The following conditions on options and runtime configuration must be adhered
+to for both the baseline and optimised build:
 
-- The runtime performance is affected by the MPI rank distribution. MPI ranks are specified
-  with the `Grid` option `--mpi X.Y.Z.T` flag. For almost all configurations, the reporting guidelines specify exactly what values to use for X, Y, Z and T. Only for the largest experiments, benchmarkers may pick the configuration that maximises the use of the system in line with the buidelines below.
+- The runtime performance is affected by the MPI rank distribution. MPI ranks
+  are specified with the `Grid` option `--mpi X.Y.Z.T` flag. For almost all configurations, the reporting guidelines specify exactly what values to use for X, Y, Z and T. Only for the largest experiments, benchmarkers may pick the configuration that maximises the use of the system in line with the buidelines below.
   
-  To obtain representative of realistic workloads, the following algorithm **must** be used for setting the MPI decomposition:
+  To obtain results representative of realistic workloads, the following
+  algorithm **must** be used for setting the MPI decomposition:
     1. Allocate ranks to T until it reaches 4, e.g. `--mpi 1.1.1.4`.
     2. Allocate ranks to Z until it reaches 4, e.g. `--mpi 1.1.4.4`.
     3. Allocate ranks to Y until it reaches 4, e.g. `--mpi 1.4.4.4`.
     4. Allocate ranks to X until it reaches 4, e.g. `--mpi 4.4.4.4`.
     5. If further ranks are required, continue to allocate evenly in powers of 2.
-- The maximum local volume size *must* be set to 48^4 using the `--max-L 48` option to 
-  `Benchmark_Grid`.
-- Some test configurations *must* be disabled using the
-  `--no-benchmark-flops-fp64 --no-benchmark-flops-sp4-2as` options to `Benchmark_Grid`.
-- While `Grid` options can be varied, the `Benchmark_Grid` software should be run with no
-  additional flags than `--json-out`, which will write the results of the benchmark to a
-  JSON file.
-- <i>TODO</i> The benchmarks require `Grid` performance data for both GPU-based and CPU-based runs. 
-  To use the code without GPUs ...
+- The maximum local volume size **must** be set to 48^4 using the `--max-L 48` 
+  option to `Benchmark_Grid`.
+- Some test configurations **must** be disabled using the following options to
+  `Benchmark_Grid`:
+  ```
+  --no-benchmark-flops-fp64
+  --no-benchmark-flops-sp4-2as
+  ```
+- While `Grid` options can be varied, the `Benchmark_Grid` software should be run
+  with no additional flags other than `--json-out`, which will write the results
+  of the benchmark to a JSON file.
 
-Besides the mandatory flags, Grid has many command-line interface flags that control its
-runtime behaviour. Identifying the optimal flags, as with the compilation options, is
-system-dependent and requires experimentation. A list of Grid flags is given by passing
-`--help` to `grid-benchmark`, and a full list is provided for both Grid and grid-benchmark
-in the [grid-benchmark README](https://github.com/aportelli/grid-benchmark/).
+Besides the mandatory flags, Grid has many command-line interface flags that
+control its runtime behaviour. Identifying the optimal flags, as with the 
+compilation options, is system-dependent and requires experimentation. A list
+of Grid flags is given by passing `--help` to `grid-benchmark`, and a full
+list is provided for both Grid and grid-benchmark in the 
+[grid-benchmark README](https://github.com/aportelli/grid-benchmark/).
 
 For the acceptance tests, all benchmark configurations are to be submitted via scheduler scripts.
 The scripts may contain arbitrary system and benchmark settings (e.g. additional environment
