@@ -36,7 +36,7 @@ shared as part of the bidder submission.
 
 ### Baseline build
 
-`Benchmark_Gird` has been written with the intention that no modifications to the source code
+`Benchmark_Grid` has been written with the intention that no modifications to the source code
 are required. <!--It is also intended to be run without the need for additional CLI parameters beyond
 `--json-out` and those required by Grid, although a full list of CLI options are provided in the
 [grid-benchmark README](https://github.com/aportelli/grid-benchmark/) if required.-->
