@@ -3,6 +3,9 @@
 This repository contains information on the GRID benchmark for the UK NNSS
 procurement. 
 
+> **Important:**
+> Please do not contact the benchmark or code maintainers directly with any questions. All questions must be submitted via the procurement response mechanism.
+
 ## Benchmark Overview
 Benchmark_Grid benchmarks three discretisations of the Dirac matrix. 
 The sparse Dirac matrix benchmark assigns a 4D array to each MPI rank/GPU, referred to as the local lattice size or local volume.
