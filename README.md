@@ -3,20 +3,21 @@
 This repository contains information on the GRID benchmark for the UK NNSS
 procurement. 
 
-> **Important:**
+> [!IMPORTANT]
 > Please do not contact the benchmark or code maintainers directly with any questions. All questions must be submitted via the procurement response mechanism.
 
 ## Benchmark Overview
 Benchmark_Grid benchmarks three discretisations of the Dirac matrix. 
 The sparse Dirac matrix benchmark assigns a 4D array to each MPI rank/GPU, referred to as the local lattice size or local volume.
-It is ran for different problem sizes (e.g. 8^4, 12^4, 16^4, 24^4, 32^4, 48^4).
+It is ran for different problem sizes (e.g. 8<sup>4</sup>, 12<sup>4</sup>, 16<sup>4</sup>, 24<sup>4</sup>, 32<sup>4</sup>, 48<sup>4</sup>).
 Since the local volumes are fixed, increasing the number of MPI ranks corresponds to a weak scaling of the benchmark.
 
 ## Software
 
 Git Repository: [https://github.com/aportelli/grid-benchmark](https://github.com/aportelli/grid-benchmark)
 
-> **Important:** All results submitted should be based on the following repository commits:
+> [!CAUTION]
+> All results submitted should be based on the following repository commits:
 >- grid-benchmark repository: [c7457a8](https://github.com/aportelli/grid-benchmark/commit/c7457a85b6a0d9d1578838af11477cb41b1a5764)
 >- Grid repository: [6165931](https://github.com/paboyle/Grid/commit/6165931afaa53a9885b6183ff762fc2477f30b51)
 
@@ -24,7 +25,8 @@ The benchmark software is licensed under GPLv2, with a list of
 contributors available at https://github.com/aportelli/grid-benchmark/graphs/contributors.
 The benchmark uses the underpinning Grid C++ 17 library for lattice QCD applications.
 
-> **Note**: the repository contains two benchmarks: Benchmark_Grid and Benchmark_IO. Only Benchmark_Grid is subject of discussion here. 
+> [!NOTE]
+> The grid-benchmark repository contains two benchmarks: Benchmark_Grid and Benchmark_IO. Only Benchmark_Grid is subject of discussion here. 
 
 
 ## Building the benchmark
@@ -70,8 +72,7 @@ Compiling the code involves the following steps:
 
 Detailed build instructions can be found in the benchmark source code
 repository at:
-
-- [https://github.com/aportelli/grid-benchmark/blob/main/Readme.md]
+[https://github.com/aportelli/grid-benchmark/blob/main/Readme.md](https://github.com/aportelli/grid-benchmark/blob/main/Readme.md)
 
 Further reference builds are available from [https://github.com/paboyle/Grid/tree/develop/systems](https://github.com/paboyle/Grid/tree/develop/systems).
 
@@ -153,7 +154,7 @@ to for both the baseline and optimised build:
     3. Allocate ranks to Y until it reaches 4, e.g. `--mpi 1.4.4.4`.
     4. Allocate ranks to X until it reaches 4, e.g. `--mpi 4.4.4.4`.
     5. If further ranks are required, continue to allocate evenly in powers of 2.
-- The maximum local volume size **must** be set to 48^4 using the `--max-L 48` 
+- The maximum local volume size **must** be set to 48<sup>4</sup> using the `--max-L 48` 
   option to `Benchmark_Grid`.
 - Some test configurations **must** be disabled using the following options to
   `Benchmark_Grid`:
@@ -237,34 +238,37 @@ To aid in testing, we provide measurements for varying problem sizes on
 the [IsambardAI system](https://docs.isambard.ac.uk/specs/#system-specifications-isambard-ai-phase-2).
 IsambardAI nodes have 4x NVIDIA GH200 per node and 4x 200 Gbps Slingshot 11 interfaces per node. 
 
-In all cases, 1 MPI process per GPU was used and 72 CPU OpenMP threads per MPI process.
+In all cases, 1 MPI process per GPU was used and 72 CPU OpenMP threads per MPI process. Command-line options used were:
+`
+--no-benchmark-flops-fp64 --no-benchmark-flops-sp4-2as --max-L 48
+`
 
-| # Nodes | Local Volume | Command line options | MPI decomposition option | # GPU | Perf. (Gflops/s/node) |
-|--:|--:|---|---|--:|--:|
-| 1 |   | `--no-benchmark-flops-fp64 --no-benchmark-flops-sp4-2as --max-L 48` | `--mpi 1.1.1.4` | 4 | |
-|   | 24^4 | | | | 22410  |
-|   | 32^4 | | | | 25656  |
-|   | 48^4 | | | | 28014  |
-| 8 |   | ``--no-benchmark-flops-fp64 --no-benchmark-flops-sp4-2as --max-L 48`` | `--mpi 1.2.4.4` | 32 | |
-|   | 24^4 | | | | 9814  |
-|   | 32^4 | | | | 13999  |
-|   | 48^4 | | | | 20757  |
-| 16 |   | ``--no-benchmark-flops-fp64 --no-benchmark-flops-sp4-2as --max-L 48`` | `--mpi 1.4.4.4` | 64 | |
-|   | 24^4 | | | | 7633  |
-|   | 32^4 | | | | 10194  |
-|   | 48^4 | | | | 16731  |
-| 32 |   | ``--no-benchmark-flops-fp64 --no-benchmark-flops-sp4-2as --max-L 48`` | `--mpi 2.4.4.4` | 128 | |
-|   | 24^4 | | | | 5154  |
-|   | 32^4 | | | | 8912  |
-|   | 48^4 | | | | 13876  |
-| 128 |   | ``--no-benchmark-flops-fp64 --no-benchmark-flops-sp4-2as --max-L 48`` | `--mpi 4.4.4.8` | 512 | |
-|   | 24^4 | | | | 3469 |
-|   | 32^4 | | | | 7293 |
-|   | 48^4 | | | | 11771 |
-| 512 |   | ``--no-benchmark-flops-fp64 --no-benchmark-flops-sp4-2as --max-L 48`` | `--mpi 4.8.8.8` | 2048 | |
-|   | 24^4 | | | |  2258 |
-|   | 32^4 | | | |  6453 |
-|   | 48^4 | | | |  11383 |
+| # Nodes | Local Volume | MPI decomposition option | # GPU | Perf. (Gflops/s/node) |
+|--:|--:|---|--:|--:|
+| 1 |   | `--mpi 1.1.1.4` | 4 | |
+|   | 24<sup>4</sup> | | | 22410  |
+|   | 32<sup>4</sup> | | | 25656  |
+|   | 48<sup>4</sup> | | | 28014  |
+| 8 |   | `--mpi 1.2.4.4` | 32 | |
+|   | 24<sup>4</sup> | | | 9814  |
+|   | 32<sup>4</sup> | | | 13999  |
+|   | 48<sup>4</sup> | | | 20757  |
+| 16 |  | `--mpi 1.4.4.4` | 64 | |
+|   | 24<sup>4</sup> | | | 7633  |
+|   | 32<sup>4</sup> | | | 10194  |
+|   | 48<sup>4</sup> | | | 16731  |
+| 32 |  | `--mpi 2.4.4.4` | 128 | |
+|   | 24<sup>4</sup> | | | 5154  |
+|   | 32<sup>4</sup> | | | 8912  |
+|   | 48<sup>4</sup> | | | 13876  |
+| 128 | | `--mpi 4.4.4.8` | 512 | |
+|   | 24<sup>4</sup> | | | 3469 |
+|   | 32<sup>4</sup> | | | 7293 |
+|   | 48<sup>4</sup> | | | 11771 |
+| 512 | | `--mpi 4.8.8.8` | 2048 | |
+|   | 24<sup>4</sup> | | |  2258 |
+|   | 32<sup>4</sup> | | |  6453 |
+|   | 48<sup>4</sup> | | |  11383 |
 
 
 ## License
