@@ -135,7 +135,7 @@ documented in the [grid-benchmark README](https://github.com/aportelli/grid-benc
 ## Running the benchmark
 
 The benchmark descriptions below specify mandatory command line flags.
-The output of the `Benchmark_Grid` code is controlled via the `--json-out` option. 
+The output of the `Benchmark_Grid` code is controlled via the `--json-out <filename>` option. 
 All details to be reported are to be taken from this output file.
 
 
@@ -145,7 +145,7 @@ The following conditions on options and runtime configuration must be adhered
 to for both the baseline and optimised build:
 
 - The runtime performance is affected by the MPI rank distribution. MPI ranks
-  are specified with the `Grid` option `--mpi X.Y.Z.T` flag. For almost all configurations, the reporting guidelines specify exactly what values to use for X, Y, Z and T. Only for the largest experiments, benchmarkers may pick the configuration that maximises the use of the system in line with the buidelines below.
+  are specified with the option `--mpi X.Y.Z.T` flag. For almost all configurations, the reporting guidelines specify exactly what values to use for X, Y, Z and T. Only for the largest experiments, benchmarkers may pick the configuration that maximises the use of the system in line with the buidelines below.
   
   To obtain results representative of realistic workloads, the following
   algorithm **must** be used for setting the MPI decomposition:
@@ -162,14 +162,13 @@ to for both the baseline and optimised build:
   --no-benchmark-flops-fp64
   --no-benchmark-flops-sp4-2as
   ```
-- While `Grid` options can be varied, the `Benchmark_Grid` software should be run
-  with no additional flags other than `--json-out`, which will write the results
-  of the benchmark to a JSON file.
+- The `Benchmark_Grid` software should be run with no additional flags
+  other than `--json-out <filename>`, which will write the results of the benchmark to a JSON file.
 
 Besides the mandatory flags, Grid has many command-line interface flags that
 control its runtime behaviour. Identifying the optimal flags, as with the 
 compilation options, is system-dependent and requires experimentation. A list
-of Grid flags is given by passing `--help` to `grid-benchmark`, and a full
+of Grid flags is given by passing `--help` to `Benchmark_Grid`, and a full
 list is provided for both Grid and grid-benchmark in the 
 [grid-benchmark README](https://github.com/aportelli/grid-benchmark/).
 
@@ -234,16 +233,15 @@ The evaluation sheets ask explicitly for the values reported in the lines ```32^
 
 ### Reference data
 
-To aid in testing, we provide measurements for varying problem sizes on
-the [IsambardAI system](https://docs.isambard.ac.uk/specs/#system-specifications-isambard-ai-phase-2).
-IsambardAI nodes have 4x NVIDIA GH200 per node and 4x 200 Gbps Slingshot 11 interfaces per node. 
+#### Isambard-AI (GH200)
+[IsambardAI](https://docs.isambard.ac.uk/specs/#system-specifications-isambard-ai-phase-2) nodes have 4x NVIDIA GH200 per node and 4x 200 Gbps Slingshot 11 interfaces per node. 
 
 In all cases, 1 MPI process per GPU was used and 72 CPU OpenMP threads per MPI process. Command-line options used were:
 `
 --no-benchmark-flops-fp64 --no-benchmark-flops-sp4-2as --max-L 48
 `
 
-| # Nodes | Local Volume | MPI decomposition option | # GPU | Perf. (Gflops/s/node) |
+| # Nodes | Local Vol. | MPI decomposition | # GPU | Perf. (Gflops/s/node) |
 |--:|--:|---|--:|--:|
 | 1 |   | `--mpi 1.1.1.4` | 4 | |
 |   | 24<sup>4</sup> | | | 22410  |
@@ -270,6 +268,25 @@ In all cases, 1 MPI process per GPU was used and 72 CPU OpenMP threads per MPI p
 |   | 32<sup>4</sup> | | |  6453 |
 |   | 48<sup>4</sup> | | |  11383 |
 
+#### Hunter (MI300A)
+[Hunter](https://kb.hlrs.de/platforms/index.php/HPE_Hunter_Hardware_and_Architecture) nodes have 4x AMD Mi300A per node and Slingshot interconnect.
+
+Command-line options used were:
+`
+--no-benchmark-flops-fp64 --no-benchmark-flops-sp4-2as --max-L 48
+`
+
+| # Nodes | Local Vol. | MPI decomposition | # GPU | Perf. (Gflops/s/node) |
+|--:|--:|---|--:|--:|
+| 1 |   | `--mpi 1.1.1.4` | 4 | |
+|   | 32<sup>4</sup> | | | 16454  |
+|   | 48<sup>4</sup> | | | 3728  |
+| 8 |   | `--mpi 1.2.4.4` | 32 | |
+|   | 32<sup>4</sup> | | | 4193  |
+|   | 48<sup>4</sup> | | | -  |
+| 16 |  | `--mpi 1.4.4.4` | 64 | |
+|   | 32<sup>4</sup> | | | 3224  |
+|   | 48<sup>4</sup> | | | 2219  |
 
 ## License
 
