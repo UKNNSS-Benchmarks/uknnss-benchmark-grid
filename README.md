@@ -156,14 +156,17 @@ to for both the baseline and optimised build:
     5. If further ranks are required, continue to allocate evenly in powers of 2.
 - The maximum local volume size **must** be set to 48<sup>4</sup> using the `--max-L 48` 
   option to `Benchmark_Grid`.
-- Some test configurations **must** be disabled using the following options to
-  `Benchmark_Grid`:
+- Some test configurations may be disabled using the following options to
+  `Benchmark_Grid` in order to speed up benchmark execution:
   ```
   --no-benchmark-flops-fp64
   --no-benchmark-flops-sp4-2as
+  --no-benchmark-flops-sp4-f
+  --no-benchmark-flops-su4
   ```
-- The `Benchmark_Grid` software should be run with no additional flags
-  other than `--json-out <filename>`, which will write the results of the benchmark to a JSON file.
+- The `Benchmark_Grid` software **must** be run with `--json-out <filename>`, which will write the results of the benchmark to a JSON file.
+- The `--accelerator_threads` parameter, while not documented in the help string to `Benchmark_Grid`, may be set to multiply the number of threads used on a device and may improve performance on some systems.
+- The `Benchmark_Grid` software should be run with no additional flags beyond those described above.
 
 Besides the mandatory flags, Grid has many command-line interface flags that
 control its runtime behaviour. Identifying the optimal flags, as with the 
