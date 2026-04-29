@@ -303,4 +303,12 @@ Command-line options used were:
 This benchmark description and any associated files are released under the
 MIT license.
 
+## Changelog
+
+The following changes to this document have been made since initial release:
+
+| <div style="width:90px">Date</div> | Change |
+|-----------:|--------|
+| 2026-04-29 | Updates to Hunter reference data and additional clarifications on Benchmark_Grid parameters |
+
 
