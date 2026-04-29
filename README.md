@@ -241,7 +241,8 @@ The evaluation sheets ask explicitly for the values reported in the lines ```32^
 
 In all cases, 1 MPI process per GPU was used and 72 CPU OpenMP threads per MPI process. Command-line options used were:
 `
---no-benchmark-flops-fp64 --no-benchmark-flops-sp4-2as --max-L 48
+--no-benchmark-flops-fp64 --no-benchmark-flops-sp4-2as --no-benchmark-flops-sp4-f
+  --no-benchmark-flops-su4 --max-L 48
 `
 
 | # Nodes | Local Vol. | MPI decomposition | # GPU | Perf. (Gflops/s/node) |
@@ -276,24 +277,38 @@ In all cases, 1 MPI process per GPU was used and 72 CPU OpenMP threads per MPI p
 
 Command-line options used were:
 `
---no-benchmark-flops-fp64 --no-benchmark-flops-sp4-2as --max-L 48
+--no-benchmark-flops-fp64 --no-benchmark-flops-sp4-2as --no-benchmark-flops-sp4-f
+  --no-benchmark-flops-su4 --max-L 48
 `
 
 | # Nodes | Local Vol. | MPI decomposition | # GPU | Perf. (Gflops/s/node) |
 |--:|--:|---|--:|--:|
+| 1 |   | `--mpi 1.1.1.1` | 1 | |
+|   | 32<sup>4</sup> | | | 5598 |
+|   | 48<sup>4</sup> | | | - |
 | 1 |   | `--mpi 1.1.1.4` | 4 | |
-|   | 32<sup>4</sup> | | | 16454  |
-|   | 48<sup>4</sup> | | | 3728  |
+|   | 32<sup>4</sup> | | | 16767  |
+|   | 48<sup>4</sup> | | | 16434  |
 | 8 |   | `--mpi 1.2.4.4` | 32 | |
-|   | 32<sup>4</sup> | | | 4193  |
+|   | 32<sup>4</sup> | | | 13584  |
 |   | 48<sup>4</sup> | | | -  |
 | 16 |  | `--mpi 1.4.4.4` | 64 | |
-|   | 32<sup>4</sup> | | | 3224  |
-|   | 48<sup>4</sup> | | | 2219  |
+|   | 32<sup>4</sup> | | | 10614  |
+|   | 48<sup>4</sup> | | | 15017  |
+| 4 |   | `--mpi 1.2.2.1` | CPU | |
+|   | 48<sup>4</sup> | | | 15042  |
 
 ## License
 
 This benchmark description and any associated files are released under the
 MIT license.
+
+## Changelog
+
+The following changes to this document have been made since initial release:
+
+| <div style="width:90px">Date</div> | Change |
+|-----------:|--------|
+| 2026-04-29 | Updates to Hunter reference data and additional clarifications on Benchmark_Grid parameters |
 
 
