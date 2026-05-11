@@ -19,7 +19,7 @@ Git Repository: [https://github.com/aportelli/grid-benchmark](https://github.com
 > [!CAUTION]
 > All results submitted should be based on the following repository commits:
 >- grid-benchmark repository: [c7457a8](https://github.com/aportelli/grid-benchmark/commit/c7457a85b6a0d9d1578838af11477cb41b1a5764)
->- Grid repository: [6165931](https://github.com/paboyle/Grid/commit/6165931afaa53a9885b6183ff762fc2477f30b51)
+>- Grid repository: [e2d607f](https://github.com/paboyle/Grid/commit/e2d607f6c708362050ec26cbe89fc971a1a879c5)
 
 The benchmark software is licensed under GPLv2, with a list of
 contributors available at https://github.com/aportelli/grid-benchmark/graphs/contributors.
@@ -309,6 +309,7 @@ The following changes to this document have been made since initial release:
 
 | <div style="width:90px">Date</div> | Change |
 |-----------:|--------|
+| 2026-05-11 | Update to Grid commit to use |
 | 2026-04-29 | Updates to Hunter reference data and additional clarifications on Benchmark_Grid parameters |
 
 
