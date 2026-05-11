@@ -44,6 +44,9 @@ Compiling the code involves the following steps:
 
    Multiple configurations can be defined for each system. Since benchmark results are requested for both CPU and GPU runs, suitable configurations for these should be defined (the names `cpu` and `gpu`, respectively, are used below).
 
+   > [!CAUTION]
+   > Please ensure the correct Grid commit is specified in this file.
+
 2. Boostrap the build environment directory `<env-dir>`:
    ```
    cd grid-benchmark
