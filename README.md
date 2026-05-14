@@ -19,7 +19,7 @@ Git Repository: [https://github.com/aportelli/grid-benchmark](https://github.com
 > [!CAUTION]
 > All results submitted should be based on the following repository commits:
 >- grid-benchmark repository: [c7457a8](https://github.com/aportelli/grid-benchmark/commit/c7457a85b6a0d9d1578838af11477cb41b1a5764)
->- Grid repository: [6165931](https://github.com/paboyle/Grid/commit/6165931afaa53a9885b6183ff762fc2477f30b51)
+>- Grid repository: [e2d607f](https://github.com/paboyle/Grid/commit/e2d607f6c708362050ec26cbe89fc971a1a879c5)
 
 The benchmark software is licensed under GPLv2, with a list of
 contributors available at https://github.com/aportelli/grid-benchmark/graphs/contributors.
@@ -43,6 +43,9 @@ Compiling the code involves the following steps:
    - [LUMI-G (CSC, Finland)](https://docs.lumi-supercomputer.eu/hardware/lumig/): ROCm 6.0.3, AMD clang 17.0.1, HPE Cray MPICH 8.1.23 (custom) + AMD MI250X GPU, Infinity fabric, Slingshot 11 interconnect (GPU configuration)
 
    Multiple configurations can be defined for each system. Since benchmark results are requested for both CPU and GPU runs, suitable configurations for these should be defined (the names `cpu` and `gpu`, respectively, are used below).
+
+   > [!CAUTION]
+   > Please ensure the correct Grid commit is specified in this file.
 
 2. Boostrap the build environment directory `<env-dir>`:
    ```
@@ -309,6 +312,7 @@ The following changes to this document have been made since initial release:
 
 | <div style="width:90px">Date</div> | Change |
 |-----------:|--------|
+| 2026-05-14 | Update to the Grid repository commit ID to be used |
 | 2026-04-29 | Updates to Hunter reference data and additional clarifications on Benchmark_Grid parameters |
 
 
